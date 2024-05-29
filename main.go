@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 type Inventory struct {
@@ -61,6 +60,11 @@ func (character *Character) takeArrow() {
 
 	character.incrementXP(-10)
 
+	if character.XP <= 0 {
+		fmt.Println("Ти помер")
+		return
+	}
+
 	character.goToTribe()
 }
 
@@ -78,13 +82,10 @@ func (character *Character) goToTribe() {
 
 func (character *Character) exploreFirstTent() {
 	fmt.Println("Ти підходиш до намету біля багаття та зазираєш усередину. Бачиш матрац і - о диво! - розкидані поруч ліки. Певно хтось дуже швидко шукав щось необхідне в аптечці, яку забрав із собою. Ти шукаєш серед ліків щось, що могло б тобі допомогти, але в ліках ти не розбираєшся, тому обираєш єдине знезаражуюче, яке знаєш, обробляєш рану і сідаєш перепочити. To be continued...")
-	os.Exit(0)
 }
 
 func (character *Character) exploreSecondTent() {
 	fmt.Println("Ти підходиш до зруйнованого намету та заглядаєш усередину. Побачене тебе приголомшує - всередині все в крові. Тебе починає нудити і ти знов непритомнієш. To be continued...")
-
-	os.Exit(0)
 }
 
 func (character *Character) walkAlongThePath() {
@@ -135,19 +136,15 @@ func (character *Character) giveDogWater() {
 
 func (character *Character) travelWithDog() {
 	fmt.Println("Ти відправляєшся в подорож разом із песиком. Через деякий час стає зрозуміло, що у вас більше немає їжі. Тож тепер час навчитися полювати. Але разом зробити це буде легше. To be continued...")
-
-	os.Exit(0)
 }
 
 func (character *Character) travelAlone() {
 	fmt.Println("Ти довго вагаєшся, бо не знаєш, чи варто брати песика з собою. Ти боїшся, що в тебе не вистачить їжі та вирішуєш залишити тваринку чекати на свого господаря і відправляєшся в подорож сам. Через деяки час тебе ловлять бандити, і ти потрапляєш до них у полон. Можливо, разом із собакою ти зміг би захиститися від них. To  be continued...")
 
-	os.Exit(0)
 }
 
 func (character *Character) incrementXP(XP int) {
 	character.XP += XP
-	fmt.Print(character.XP)
 }
 
 func getUserInput(optionsCount int) int {
@@ -178,12 +175,5 @@ func main() {
 		Inventory: &inventory,
 	}
 
-	for {
-		if character.XP <= 0 {
-			fmt.Println("Ти помер")
-			break
-		}
-
-		character.wakeUp()
-	}
+	character.wakeUp()
 }
