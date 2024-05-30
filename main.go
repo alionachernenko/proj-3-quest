@@ -56,9 +56,12 @@ func (character *Character) exploreBody() {
 }
 
 func (character *Character) takeArrow() {
-	fmt.Println("Ти кладеш стрілу на землю та знімаєш із себе рюкзак. Відкриваєш його. Трохи неуважно тягнешся за стрілою, торкаєшся її вістря. Воно залишає маленький поріз і забирає 10 пунктів здоровʼя. Треба знайти, чим можна обробити. Ти не відчуваєш ніякого болю, але вирішуєш поспішити далі, залишивши стрілу на своєму місці. Можливо, поруч є люди")
+	fmt.Println("Ти кладеш стрілу на землю та знімаєш із себе рюкзак. Відкриваєш його. Трохи неуважно тягнешся за стрілою, торкаєшся її вістря. Воно залишає маленький поріз і забирає 10 пунктів здоровʼя. Треба знайти, чим можна обробити. Ти не відчуваєш ніякого болю, але вирішуєш поспішити далі, все ж узявши стрілу з собою. Можливо, поруч є люди")
 
 	character.incrementXP(-10)
+	character.addItemToInventory("arrow")
+
+	fmt.Println(character.Inventory)
 
 	if character.XP <= 0 {
 		fmt.Println("Ти помер")
@@ -104,6 +107,7 @@ func (character *Character) walkAlongThePath() {
 func (character *Character) feedDog() {
 	fmt.Println("Ти відкриваєш консерву та ставиш її біля песика. Спочатку він боїться, але згодом починає їсти та зʼїдає майже всю. \n1) Погладити песика \n2) Дати песику води")
 
+	character.removeItemFromInventory("canned_meat")
 	choice := getUserInput(2)
 
 	switch choice {
@@ -149,14 +153,30 @@ func (character *Character) incrementXP(XP int) {
 
 func getUserInput(optionsCount int) int {
 	var inputValue int
-	fmt.Scan(&inputValue)
 
-	if inputValue > optionsCount || inputValue < 1 {
-		fmt.Println("Такої опції немає. Спробуй знову")
-		return getUserInput(optionsCount)
+	for {
+		fmt.Scan(&inputValue)
+
+		if inputValue > optionsCount || inputValue < 1 {
+			fmt.Println("Такої опції немає. Спробуй знову")
+		} else {
+			break
+		}
 	}
 
 	return inputValue
+}
+
+func (character *Character) addItemToInventory(item InventoryItem) {
+	character.Inventory.Items = append(character.Inventory.Items, item)
+}
+
+func (character *Character) removeItemFromInventory(item InventoryItem) {
+	for i, inventoryItem := range character.Inventory.Items {
+		if item == inventoryItem {
+			character.Inventory.Items = append(character.Inventory.Items[:i], character.Inventory.Items[i+1:]...)
+		}
+	}
 }
 
 func main() {
